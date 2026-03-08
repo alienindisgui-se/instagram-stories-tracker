@@ -49,7 +49,7 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add data/instagram_stories_history.json
+        git add data/instagram_stories_history.json data/instagram_stories_analytics.json
         if git diff --staged --quiet; then
           echo "No changes to commit"
         else
