@@ -41,7 +41,7 @@ jobs:
     
     - name: Run Instagram Stories Tracker
       env:
-        IG_STORIES_DISCORD_WEBHOOK: ${{ secrets.INSTAGRAM_STORIES_DISCORD_WEBHOOK }}
+        INSTAGRAM_STORIES_DISCORD_WEBHOOK: ${{ secrets.INSTAGRAM_STORIES_DISCORD_WEBHOOK }}
       run: |
         python scripts/instagram_stories_tracker.py
 
