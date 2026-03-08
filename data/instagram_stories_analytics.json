@@ -1,0 +1,42 @@
+{
+    "joakimlundell": {
+        "total_stories": 2,
+        "daily_counts": {
+            "2026-03-08": 2
+        },
+        "first_seen": "2026-03-08",
+        "last_seen": "2026-03-08"
+    },
+    "lisenbjorlund": {
+        "total_stories": 4,
+        "daily_counts": {
+            "2026-03-08": 4
+        },
+        "first_seen": "2026-03-08",
+        "last_seen": "2026-03-08"
+    },
+    "realbaronen": {
+        "total_stories": 12,
+        "daily_counts": {
+            "2026-03-08": 12
+        },
+        "first_seen": "2026-03-08",
+        "last_seen": "2026-03-08"
+    },
+    "themotvikt": {
+        "total_stories": 1,
+        "daily_counts": {
+            "2026-03-08": 1
+        },
+        "first_seen": "2026-03-08",
+        "last_seen": "2026-03-08"
+    },
+    "juliapuhakka": {
+        "total_stories": 4,
+        "daily_counts": {
+            "2026-03-08": 4
+        },
+        "first_seen": "2026-03-08",
+        "last_seen": "2026-03-08"
+    }
+}
