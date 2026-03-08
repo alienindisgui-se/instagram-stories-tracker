@@ -1,0 +1,17 @@
+# Instagram Follower Collector Dependencies
+
+# HTTP requests
+requests==2.31.0
+curl-cffi==0.5.10
+
+# Environment variables
+python-dotenv==1.0.0
+
+# IG Stories scraping
+playwright
+playwright-stealth
+httpx
+
+# Cloudflare bypass and proxy rotation
+cloudscraper>=1.2.60
+swiftshadow>=1.1.0
