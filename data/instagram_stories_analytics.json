@@ -30,21 +30,22 @@
         "last_seen": "2026-03-10"
     },
     "themotvikt": {
-        "total_stories": 4,
+        "total_stories": 6,
         "daily_counts": {
             "2026-03-08": 1,
-            "2026-03-10": 3
+            "2026-03-10": 5
         },
         "first_seen": "2026-03-08",
         "last_seen": "2026-03-10"
     },
     "juliapuhakka": {
-        "total_stories": 8,
+        "total_stories": 10,
         "daily_counts": {
             "2026-03-08": 6,
-            "2026-03-09": 2
+            "2026-03-09": 2,
+            "2026-03-10": 2
         },
         "first_seen": "2026-03-08",
-        "last_seen": "2026-03-09"
+        "last_seen": "2026-03-10"
     }
 }
