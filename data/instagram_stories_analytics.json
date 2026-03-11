@@ -10,23 +10,23 @@
         "last_seen": "2026-03-10"
     },
     "lisenbjorlund": {
-        "total_stories": 9,
+        "total_stories": 10,
         "daily_counts": {
             "2026-03-08": 4,
             "2026-03-09": 1,
             "2026-03-10": 1,
-            "2026-03-11": 3
+            "2026-03-11": 4
         },
         "first_seen": "2026-03-08",
         "last_seen": "2026-03-11"
     },
     "realbaronen": {
-        "total_stories": 37,
+        "total_stories": 44,
         "daily_counts": {
             "2026-03-08": 13,
             "2026-03-09": 2,
             "2026-03-10": 10,
-            "2026-03-11": 12
+            "2026-03-11": 19
         },
         "first_seen": "2026-03-08",
         "last_seen": "2026-03-11"
