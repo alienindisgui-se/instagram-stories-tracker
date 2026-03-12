@@ -1,13 +1,14 @@
 {
     "joakimlundell": {
-        "total_stories": 9,
+        "total_stories": 10,
         "daily_counts": {
             "2026-03-08": 2,
             "2026-03-09": 4,
-            "2026-03-10": 3
+            "2026-03-10": 3,
+            "2026-03-12": 1
         },
         "first_seen": "2026-03-08",
-        "last_seen": "2026-03-10"
+        "last_seen": "2026-03-12"
     },
     "lisenbjorlund": {
         "total_stories": 10,
@@ -21,13 +22,13 @@
         "last_seen": "2026-03-11"
     },
     "realbaronen": {
-        "total_stories": 55,
+        "total_stories": 62,
         "daily_counts": {
             "2026-03-08": 13,
             "2026-03-09": 2,
             "2026-03-10": 10,
             "2026-03-11": 19,
-            "2026-03-12": 11
+            "2026-03-12": 18
         },
         "first_seen": "2026-03-08",
         "last_seen": "2026-03-12"
