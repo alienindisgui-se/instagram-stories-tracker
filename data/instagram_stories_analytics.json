@@ -1,14 +1,15 @@
 {
     "joakimlundell": {
-        "total_stories": 10,
+        "total_stories": 11,
         "daily_counts": {
             "2026-03-08": 2,
             "2026-03-09": 4,
             "2026-03-10": 3,
-            "2026-03-12": 1
+            "2026-03-12": 1,
+            "2026-03-13": 1
         },
         "first_seen": "2026-03-08",
-        "last_seen": "2026-03-12"
+        "last_seen": "2026-03-13"
     },
     "lisenbjorlund": {
         "total_stories": 10,
