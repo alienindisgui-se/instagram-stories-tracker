@@ -5,13 +5,13 @@
 ![Repo Size](https://img.shields.io/github/repo-size/alienindisgui-se/instagram-stories-tracker?style=for-the-badge&color=blue)
 ![License](https://img.shields.io/github/license/alienindisgui-se/instagram-stories-tracker?style=for-the-badge&color=green)
 
-![CI](https://img.shields.io/github/actions/workflow/status/alienindisgui-se/instagram-stories-tracker/instagram-stories-tracker.yml?label=CI&logo=github&style=for-the-badge&color=0099FF) ![Every 6h](https://img.shields.io/badge/Schedule-Every%206h-blue?style=for-the-badge&logo=github)
+![CI](https://img.shields.io/github/actions/workflow/status/alienindisgui-se/instagram-stories-tracker/instagram-stories-tracker.yml?label=CI&logo=github&style=for-the-badge&color=0099FF) ![Every 4h](https://img.shields.io/badge/Schedule-Every%204h-blue?style=for-the-badge&logo=github)
 
 A Python-based system for automated Instagram stories tracking with periodic monitoring, Discord webhook notifications, story media uploads, analytics tracking, and historical data management.
 
 ## 🚀 Features
 
-- **📊 Periodic Monitoring**: Stories tracking every 6 hours with new story detection
+- **📊 Periodic Monitoring**: Stories tracking every 4 hours with new story detection
 - **🤖 Automated Execution**: GitHub Actions with scheduled runs and manual triggers
 - **💬 Discord Notifications**: Batched embed reports with story media uploads and user statistics
 - **🔽 Video Compression**: Automatic compression of oversized videos using FFmpeg
@@ -101,7 +101,7 @@ The system stores story data in JSON files:
 
 | Workflow | Schedule | Description |
 |----------|----------|-------------|
-| Stories Tracker | `0 0,6,12,18 * * *` | Runs every 6 hours at 00:00, 06:00, 12:00, 18:00 UTC |
+| Stories Tracker | `0 0,4,8,12,16,20 * * *` | Runs every 4 hours at 00:00, 04:00, 08:00, 12:00, 16:00, 20:00 UTC |
 
 ### Required GitHub Secrets
 
