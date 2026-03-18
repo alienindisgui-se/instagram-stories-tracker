@@ -14,6 +14,7 @@ A Python-based system for automated Instagram stories tracking with periodic mon
 - **📊 Periodic Monitoring**: Stories tracking every 6 hours with new story detection
 - **🤖 Automated Execution**: GitHub Actions with scheduled runs and manual triggers
 - **💬 Discord Notifications**: Batched embed reports with story media uploads and user statistics
+- **🔽 Video Compression**: Automatic compression of oversized videos using FFmpeg
 - **📈 Analytics Tracking**: Total stories, daily counts, average per day, tracking days
 - **🔒 Security-First**: Cloudflare bypass with cloudscraper, error handling, and retries
 - **🔄 Historical Data**: JSON-based storage with automatic story ID tracking and deduplication
@@ -41,6 +42,7 @@ instagram-stories-tracker/
 ### Prerequisites
 
 - Python 3.11+
+- FFmpeg (for video compression)
 - GitHub repository (for automation)
 - Discord server (for notifications)
 
@@ -110,7 +112,39 @@ The system stores story data in JSON files:
 
 The workflow supports manual triggering via the GitHub Actions UI.
 
-## 💬 Discord Integration
+## �️ Video Compression
+
+The system automatically compresses oversized videos to meet Discord's file size limits:
+
+### Compression Features
+
+- **Automatic Detection**: Videos exceeding 10MB trigger compression
+- **FFmpeg Integration**: Uses industry-standard FFmpeg for quality compression
+- **Smart Targeting**: Compresses to ~8MB to stay safely under Discord's 10MB limit
+- **Quality Preservation**: Maintains acceptable quality for Instagram stories
+- **Comprehensive Logging**: Tracks original size, compressed size, and compression ratios
+
+### Compression Process
+
+1. **Size Check**: Videos larger than 10MB are flagged for compression
+2. **FFmpeg Processing**: Reduces resolution (max 1280px width) and optimizes bitrate
+3. **Quality Verification**: Ensures compressed file stays under size limit
+4. **Fallback Handling**: Skips file if compression fails or remains too large
+
+### Requirements
+
+- FFmpeg must be installed and accessible in system PATH
+- `ffmpeg-python` package (included in requirements)
+
+### Example Log Output
+
+```
+2026-03-18 13:57:25 - INFO - Compressing realbaronen_385370747587897.mp4 (10.48MB)
+2026-03-18 13:57:26 - INFO - Successfully compressed realbaronen_385370747587897.mp4: 10.48MB → 7.23MB (31.0% reduction)
+2026-03-18 13:57:26 - INFO - Using compressed version for realbaronen_385370747587897.mp4
+```
+
+## � Discord Integration
 
 ### Notification Format
 
@@ -183,8 +217,14 @@ python scripts/instagram_stories_tracker.py
 - Check network connectivity
 
 #### "Media upload failed"
-- Check file size (8MB limit)
-- Verify Discord permissions
+- Check file size (10MB limit for free Discord)
+- Verify FFmpeg is installed for video compression
+- Check Discord permissions
+
+#### "FFmpeg not available"
+- Install FFmpeg and ensure it's in system PATH
+- Verify `ffmpeg-python` package is installed
+- Check compression logs for specific errors
 
 ## 📄 License
 

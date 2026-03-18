@@ -9,12 +9,18 @@ import json
 import logging
 import os
 import time
+import tempfile
 from datetime import date, datetime, timezone
 from typing import Dict, List, Optional
 
 import httpx
 import cloudscraper
 from dotenv import load_dotenv
+try:
+    import ffmpeg
+    FFMPEG_AVAILABLE = True
+except ImportError:
+    FFMPEG_AVAILABLE = False
 
 # Load environment variables
 load_dotenv()
@@ -26,11 +32,19 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+if not FFMPEG_AVAILABLE:
+    logger.warning("ffmpeg-python not available, video compression disabled")
+
 # Suppress HTTP request logging to INFO level, only log errors
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logging.getLogger("httpcore").setLevel(logging.WARNING)
 
 class InstagramStoriesTracker:
+    # Discord file upload limit for free users (updated from 8MB to 10MB)
+    DISCORD_FILE_SIZE_LIMIT = 10 * 1024 * 1024  # 10MB
+    # Target compressed file size to stay safely under limit
+    TARGET_COMPRESSED_SIZE = 8 * 1024 * 1024  # 8MB
+    
     def __init__(self, config_file: str = "config/instagram_stories_config.json", data_file: str = "data/instagram_stories_history.json", analytics_file: str = "data/instagram_stories_analytics.json", discord_webhook: str = None):
         self.config_file = config_file
         self.data_file = data_file
@@ -178,6 +192,91 @@ class InstagramStoriesTracker:
             logger.error(f"Failed to download media from {story_url}: {e}")
             return None
 
+    def compress_video(self, video_bytes: bytes, filename: str) -> Optional[bytes]:
+        """
+        Compress video using FFmpeg to stay under Discord file size limit.
+        
+        Args:
+            video_bytes: Original video data
+            filename: Original filename for logging
+            
+        Returns:
+            Compressed video bytes or None if compression fails
+        """
+        if not FFMPEG_AVAILABLE:
+            logger.warning(f"FFmpeg not available, cannot compress {filename}")
+            return None
+            
+        original_size = len(video_bytes)
+        logger.info(f"Compressing {filename} ({original_size / 1024 / 1024:.2f}MB)")
+        
+        try:
+            # Create temporary files
+            with tempfile.NamedTemporaryFile(suffix='.mp4', delete=False) as input_file, \
+                 tempfile.NamedTemporaryFile(suffix='.mp4', delete=False) as output_file:
+                
+                input_path = input_file.name
+                output_path = output_file.name
+                
+                # Write original video to temp file
+                input_file.write(video_bytes)
+                input_file.flush()
+                
+                # Calculate target bitrate based on desired file size
+                # Assume 30 seconds duration for stories (conservative estimate)
+                target_bitrate = int((self.TARGET_COMPRESSED_SIZE * 8) / 30)  # bits per second
+                
+                try:
+                    # Apply compression with FFmpeg
+                    (
+                        ffmpeg
+                        .input(input_path)
+                        .output(
+                            output_path,
+                            vcodec='libx264',
+                            acodec='aac',
+                            vf='scale=1280:-2',  # Max width 1280, maintain aspect ratio
+                            maxrate=f'{target_bitrate}',
+                            bufsize=f'{target_bitrate * 2}',
+                            crf=23,  # Balanced quality
+                            movflags='+faststart'  # Better streaming
+                        )
+                        .overwrite_output()
+                        .run(capture_stdout=True, capture_stderr=True)
+                    )
+                    
+                    # Read compressed video
+                    with open(output_path, 'rb') as f:
+                        compressed_bytes = f.read()
+                    
+                    compressed_size = len(compressed_bytes)
+                    compression_ratio = (original_size - compressed_size) / original_size * 100
+                    
+                    logger.info(f"Successfully compressed {filename}: "
+                              f"{original_size / 1024 / 1024:.2f}MB → "
+                              f"{compressed_size / 1024 / 1024:.2f}MB "
+                              f"({compression_ratio:.1f}% reduction)")
+                    
+                    return compressed_bytes
+                    
+                except ffmpeg.Error as e:
+                    logger.error(f"FFmpeg compression failed for {filename}: {e.stderr.decode()}")
+                    return None
+                    
+        except Exception as e:
+            logger.error(f"Error compressing video {filename}: {e}")
+            return None
+            
+        finally:
+            # Clean up temporary files
+            try:
+                if 'input_path' in locals():
+                    os.unlink(input_path)
+                if 'output_path' in locals():
+                    os.unlink(output_path)
+            except OSError:
+                pass
+
     def send_batched_discord_notification(self, username: str, stories: List[Dict]):
         """Send batched notification to Discord with uploaded files and simple embed."""
         if not self.discord_webhook or not stories:
@@ -209,9 +308,20 @@ class InstagramStoriesTracker:
                         ext = 'mp4' if is_video else 'jpg'
                         filename = f"{username}_{story_id[:15]}.{ext}"
                         
-                        # Check file size (Discord limit is 8MB for regular users)
-                        if len(media_bytes) > 8 * 1024 * 1024:  # 8MB
-                            logger.warning(f"File too large for Discord upload: {filename} ({len(media_bytes)} bytes)")
+                        # Check file size and compress if needed
+                        if len(media_bytes) > self.DISCORD_FILE_SIZE_LIMIT:
+                            if is_video and FFMPEG_AVAILABLE:
+                                # Attempt compression
+                                compressed_bytes = self.compress_video(media_bytes, filename)
+                                if compressed_bytes and len(compressed_bytes) <= self.DISCORD_FILE_SIZE_LIMIT:
+                                    media_bytes = compressed_bytes
+                                    logger.info(f"Using compressed version for {filename}")
+                                else:
+                                    logger.warning(f"Compression failed or still too large for Discord upload: {filename} ({len(media_bytes)} bytes)")
+                                    continue  # Skip this file
+                            else:
+                                logger.warning(f"File too large for Discord upload: {filename} ({len(media_bytes)} bytes)")
+                                continue  # Skip this file
                         else:
                             # Determine mimetype
                             mimetype = 'video/mp4' if is_video else 'image/jpeg'

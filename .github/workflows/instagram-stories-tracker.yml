@@ -39,6 +39,11 @@ jobs:
         pip install -r requirements/requirements-instagram.txt
         playwright install --with-deps
     
+    - name: Install FFmpeg
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ffmpeg
+    
     - name: Run Instagram Stories Tracker
       env:
         INSTAGRAM_STORIES_DISCORD_WEBHOOK: ${{ secrets.INSTAGRAM_STORIES_DISCORD_WEBHOOK }}
