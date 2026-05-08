@@ -1,0 +1,26 @@
+name: Discord Release Notes
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  release-notes:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Release Notes to Discord
+        uses: alienindisgui-se/discord-changelog-notifier@v1.0.0
+        with:
+          github_token: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+          discord_webhook: ${{ secrets.NOTIFICATION_DISCORD_WEBHOOK }}
+          ai_api_key: ${{ secrets.GEMINI_API_KEY }}
+          language: 'sv'
