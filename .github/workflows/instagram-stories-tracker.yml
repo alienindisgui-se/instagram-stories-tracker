@@ -2,8 +2,8 @@ name: Instagram Stories Tracker
 
 on:
   schedule:
-    # Run every 4 hours at 00:00, 04:00, 08:00, 12:00, 16:00, 20:00 UTC
-    - cron: '0 0,4,8,12,16,20 * * *'
+    # Run every hour at the top of the hour
+    - cron: '0 * * * *'
   workflow_dispatch:
     # Allow manual triggering
 
