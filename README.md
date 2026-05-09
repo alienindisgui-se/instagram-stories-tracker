@@ -5,14 +5,15 @@
 ![Repo Size](https://img.shields.io/github/repo-size/alienindisgui-se/instagram-stories-tracker?style=for-the-badge&color=blue)
 ![License](https://img.shields.io/github/license/alienindisgui-se/instagram-stories-tracker?style=for-the-badge&color=green)
 
-![CI](https://img.shields.io/github/actions/workflow/status/alienindisgui-se/instagram-stories-tracker/instagram-stories-tracker.yml?label=CI&logo=github&style=for-the-badge&color=0099FF) ![Every 4h](https://img.shields.io/badge/Schedule-Every%204h-blue?style=for-the-badge&logo=github)
+![CI](https://img.shields.io/github/actions/workflow/status/alienindisgui-se/instagram-stories-tracker/instagram-stories-tracker.yml?label=CI&logo=github&style=for-the-badge&color=0099FF) ![Hourly](https://img.shields.io/badge/Schedule-Hourly-blue?style=for-the-badge&logo=github)
 
 A Python-based system for automated Instagram stories tracking with periodic monitoring, Discord webhook notifications, story media uploads, analytics tracking, and historical data management.
 
 ## 🚀 Features
 
-- **📊 Periodic Monitoring**: Stories tracking every 4 hours with new story detection
+- **📊 Periodic Monitoring**: Stories tracking every hour with new story detection
 - **🤖 Automated Execution**: GitHub Actions with scheduled runs and manual triggers
+- **📝 Automated Release Notes**: AI-generated release notes sent to Discord on PR merge
 - **💬 Discord Notifications**: Batched embed reports with story media uploads and user statistics
 - **🔽 Video Compression**: Automatic compression of oversized videos using FFmpeg
 - **📈 Analytics Tracking**: Total stories, daily counts, average per day, tracking days
@@ -34,7 +35,8 @@ instagram-stories-tracker/
 ├── requirements/
 │   └── requirements-instagram.txt       # Python dependencies
 └── .github/workflows/
-    └── instagram-stories-tracker.yml    # GitHub Actions automation
+    ├── instagram-stories-tracker.yml    # GitHub Actions automation
+    └── merge-notification.yml           # Discord release notes automation
 ```
 
 ## 🛠️ Setup Instructions
@@ -97,16 +99,20 @@ The system stores story data in JSON files:
 
 ## 🤖 GitHub Actions Automation
 
-### Scheduled Workflows
+### Workflows
 
-| Workflow | Schedule | Description |
-|----------|----------|-------------|
-| Stories Tracker | `0 0,4,8,12,16,20 * * *` | Runs every 4 hours at 00:00, 04:00, 08:00, 12:00, 16:00, 20:00 UTC |
+| Workflow | Schedule/Trigger | Description |
+|----------|------------------|-------------|
+| Stories Tracker | `17 * * * *` | Runs every hour at 17 minutes past |
+| Discord Release Notes | `pull_request` (closed) | Sends AI-generated release notes to Discord when a PR is merged |
 
 ### Required GitHub Secrets
 
-1. **INSTAGRAM_STORIES_DISCORD_WEBHOOK**: Discord webhook URL
-2. **GITHUB_TOKEN**: Automatically provided by GitHub Actions
+1. **INSTAGRAM_STORIES_DISCORD_WEBHOOK**: Discord webhook URL for stories
+2. **NOTIFICATION_DISCORD_WEBHOOK**: Discord webhook URL for release notes
+3. **PERSONAL_GITHUB_TOKEN**: GitHub token for release notes action
+4. **GEMINI_API_KEY**: API key for generating AI release notes
+5. **GITHUB_TOKEN**: Automatically provided by GitHub Actions
 
 ### Manual Execution
 
