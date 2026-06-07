@@ -103,7 +103,7 @@ The system stores story data in JSON files:
 
 | Workflow | Schedule/Trigger | Description |
 |----------|------------------|-------------|
-| Stories Tracker | `17 * * * *` | Runs every hour at 17 minutes past |
+| Stories Tracker | `7,22,37,52 * * * *` | Runs every 15 minutes (offset) at :07/:22/:37/:52 UTC |
 | Discord Release Notes | `pull_request` (closed) | Sends AI-generated release notes to Discord when a PR is merged |
 
 ### Required GitHub Secrets
